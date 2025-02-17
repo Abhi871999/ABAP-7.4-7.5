@@ -8,7 +8,7 @@ write: lv_ref_int->*.
 Assign lv_ref_int->* to field-symbol(<fs_int>)
 write : <fs_int>
 
-***********************************************************************88888
+**********************************************************************
 Inline declarations.
 
 REPORT zprg_01.
