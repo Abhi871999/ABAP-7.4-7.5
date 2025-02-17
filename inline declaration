@@ -1,0 +1,59 @@
+Field symbol and reference variable
+Report z_new_value_operator.
+data: lv_ref_int type ref to i.
+create data lv_ref_int
+lv_ref_int->*= 1.
+write: lv_ref_int->*.
+
+Assign lv_ref_int->* to field-symbol(<fs_int>)
+write : <fs_int>
+
+***********************************************************************88888
+Inline declarations.
+
+REPORT zprg_01.
+
+class lcl_main DEFINITION.
+
+ PUBLIC SECTION.
+class-METHODS: main.
+ENDCLASS.
+
+
+CLASS lcl_main IMPLEMENTATION.
+
+  METHOD main.
+   SELECT
+   from vbak
+   FIELDS vbeln, vkorg,erzet
+   into table @data(it_vbak)
+   up to 50 rows.
+
+   if sy-subrc is initial.
+    data(lv_lines) = lines( it_vbak ).
+   ENDIF.
+
+  * loop at it_vbak ASSIGNING FIELD-SYMBOL(<ls_vbak>).
+  * ENDLOOP.
+*  read TABLE it_vbak ASSIGNING FIELD-SYMBOL(<ls_vbak1>) INDEX 1.
+*  read table it_vbak into ls_vbak2 index 1.
+
+
+  cl_salv_table=>factory(
+    IMPORTING
+      r_salv_table   = DATA(lr_alv)
+    CHANGING
+      t_table        = it_vbak
+  ).
+
+    lr_alv->display(  ).
+
+
+  ENDMETHOD.
+
+ENDCLASS.
+
+start-of-SELECTION.
+*  data(lcl_main_1) = new lcl_main(  ).
+
+  lcl_main=>main(  ).
