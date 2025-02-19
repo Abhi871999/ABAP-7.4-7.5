@@ -1,0 +1,46 @@
+types : tt_employee_table TYPE TABLE OF zemp_01 with default key.
+ types : ts_employee_table TYPE  zemp_01.
+
+ data : ls_employee_table1 TYPE REF TO zemp_01.
+
+ data(ls_employee) = NEW ts_employee_table( mandt = 'sy-mandt'
+                                            empid    = '234'
+                                            name  = 'Software'
+                                            Age   = '30') .
+ ls_employee_table1 = NEW #( mandt = 'sy'
+                                            empid    = '0002'
+                                            name  = 'Labs'
+                                            Age   = '42') .
+                                          
+  data(it_employee) = NEW tt_employee_table( ( mandt = 'mandt'
+                                            empid    = '003'
+                                            name  = 'SAP-RAP'
+                                            Age   = '356') ). 
+ 
+/// Dereference                                                                                 
+
+   cl_demo_output=>display(
+     EXPORTING 
+       data = ls_employee->*
+*       name =
+   ).
+
+   cl_demo_output=>display(
+     EXPORTING
+       data = ls_employee_table1->*
+*       name =
+   ).
+   
+   cl_demo_output=>display(
+     EXPORTING
+       data = it_employee->*
+*       name =
+   ).
+   
+   or Using value opeartor
+  
+data(ls_employee) = VALUE ts_employee_table( mandt = 'sy-mandt'
+                                            empid    = '234'
+                                            name  = 'Software'
+                                            Age   = '30') . 
+   
