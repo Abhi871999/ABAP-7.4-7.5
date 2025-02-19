@@ -1,0 +1,55 @@
+data : lv_num TYPE p  decimals 2.
+ data : begin of ty_result,
+        name TYPE string,
+        key TYPE String,
+        number TYPE string,
+        date TYPE string,
+        time TYPE string,
+        utclong type string,
+        timestamp TYPE string,
+       END OF ty_result,
+       it_results LIKE TABLE OF ty_result.
+
+  SELECT a~land as key,
+         b~landx as name
+         from t005x as a
+         inner join t005t as b
+         on a~land = b~land1
+         into table  @data(it_country_tab)
+         where spras = @sy-langu.
+
+   SORT it_country_tab by name as text.
+   INSERT VALUE #( key = space name = 'User Master record' )
+          into it_country_tab index 1.
+
+      lv_num = sy-datum / 100.
+
+    loop at it_country_tab ASSIGNING FIELD-SYMBOL(<ls_tab>).
+*    data(tabix) = sy-tabix.
+*    set country <ls_tab>-key.
+
+    it_results = VALUE #( BASE it_results
+    ( name = |{ <ls_tab>-name case = upper width = 60} |
+      key  =  <ls_tab>-key
+      number = |{ lv_num NUMBER = USER  sign = rightplus}|
+      date  = |{ sy-datum DATE = USER } \n { sy-datum DATE = USER }|
+      time = |{ sy-uzeit TIME = USER }|
+*      utclong = |{ utclong_curent(  ) }|
+*      timestamp = |{ cl_abap_tstmp=>utlong2tstmp_short( utclong_current(  ) ) }|
+     )
+        ).
+    endloop.
+
+    cl_salv_table=>factory(
+*      EXPORTING
+*        list_display   = IF_SALV_C_BOOL_SAP=>FALSE
+*        r_container    =
+*        container_name =
+      IMPORTING
+        r_salv_table   = data(lr_alv)
+      CHANGING
+        t_table        = it_results
+    ).
+*      CATCH cx_salv_msg.    "
+
+    lr_alv->display(  ) .
